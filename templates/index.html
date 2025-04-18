@@ -1,0 +1,150 @@
+
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auron</title>
+    <link rel="stylesheet" href="../static/css/styles.css">
+    <script src="../static/js/script.js"></script>
+    <link rel="apple-touch-icon" sizes="180x180" href="../static/Faviicon/favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../static/Faviicon/favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../static/Faviicon/favicon_io/favicon-16x16.png">
+    <link rel="manifest" href="../static/Faviicon/favicon_io/site.webmanifest">
+</head>
+
+<body>
+    <header class="hd">
+        <figure class="logo">
+            <img src="../static/Faviicon/trace.svg">
+        </figure>
+        <nav class="navigate">
+            <div class="hamburger" onclick="toggleMenu()">&#9776;</div>
+            <div class="nav-menu">
+                <ul id="menu-list">
+                    <a href="{{ url_for('main_page') }}"><li>Home</li></a>
+                    <li class="dropdown">
+                        <a href="#" class="dropbtn">Emergency</a>
+                        <div class="dropdown-content">
+                            <a href="{{ url_for('guide1') }}">CPR</a>
+                            <a href="{{ url_for('guide2') }}">Snake Bite</a>
+                            <a href="{{ url_for('guide3') }}">Fire Accident</a>
+                            <a href="{{ url_for('guide4') }}">Electric Shock</a>
+                        </div>
+                    </li>
+                    {% if session.get('user') %}
+                        <a href="{{ url_for('logout') }}" class="logout-btn"><li>Logout</li></a>
+                    {% else %}
+                        <a href="{{ url_for('signup_page') }}"><li>Login</li></a>
+                    {% endif %}
+                    <a href="#" onclick="openPopup()"><li>About Us</li></a>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <div id="about-us-popup" class="popup">
+        <div class="popup-content">
+            <span class="close" onclick="closePopup()">&times;</span>
+            <h2>Meet the Auron Team</h2>
+            <div class="part">
+            <ul>
+                <li class="highlight">T.Gowtham Reddy</li>
+                <li class="highlight">Shaik Zuheruddin</li>
+                <li class="highlight">S.Kalyan Reddy</li>
+                <li class="highlight">Mohammad Asif</li>
+                <li class="highlight">K.D.V.Chakradhar</li>
+            </ul>
+            </div>
+        </div>
+    </div>
+    <div class="hello">
+    <h1 id="Heading">Welcome to Auron</h1>
+    <form method="POST" onsubmit="debugForm()">
+        <h2 class="separate">Find Your medicine</h2>
+        <label for="sex">
+            <p>Gender:</p>
+            <select class="inp" name="Gender" id="sex" required>
+                <option value="" disabled selected>Select</option>
+                <option value="Male" {% if gender=="Male" %}selected{% endif %}>Male</option>
+                <option value="Female" {% if gender=="Female" %}selected{% endif %}>Female</option>
+            </select>
+        </label>
+
+        <label>
+            <p>Age:</p>
+            <input class="inp" type="number" name="age" value="{{ age }}" required>
+        </label>
+
+        <label id="search">
+            <p>Symptoms:</p>
+            <input id="sea" type="text" name="symptoms" placeholder="Enter Symptoms separated by Commas" required>
+        </label>
+        <p style="display: none;">© 2025 Shaik Zuheruddin. All Rights Reserved.</p>
+        <button class="sub" type="submit">Find Medicine</button>
+    </form>
+    <div class="search-container">
+        <h2>Search for a Medicine</h2>
+        <form action="{{ url_for('search_medicine') }}" method="POST">
+            <input type="text" name="medicine" placeholder="Enter medicine name..." required>
+            <button type="submit">Search</button>
+            {% if medicine %}
+            {% if symptoms %}
+                <p><strong>Symptoms or Indications:</strong></p>
+                <p>{{ symptoms }}</p>
+            {% else %}
+                <p>No information found for this medicine or did you enter wrong spelling.</p>
+            {% endif %}
+            {% endif %}
+        </form>
+    </div>
+    <div class="emergency">
+        <h1 class="now">Emergency Guides</h1>
+        <p class="now">If you need further assistance, check out the following first aid guides:</p>
+        <ul>
+            <li><a class="new" href="{{ url_for('guide1') }}"><img src="../static/images/Emergency logos/cpr.jpg" alt="CPR">
+                    <figcaption>CPR</figcaption>
+                </a></li>
+            <li><a class="new" href="{{ url_for('guide2') }}"><img src="../static/images/Emergency logos/snake_bite.jpg"
+                        alt="Snake Bite">
+                    <figcaption>Snake Bite</figcaption>
+                </a></li>
+            <li><a class="new" href="{{ url_for('guide3') }}"><img
+                        src="../static/images/Emergency logos/fire_accident.jpg" alt="Fire Accident">
+                    <figcaption>Fire Accident</figcaption>
+                </a></li>
+            <li><a class="new" href="{{ url_for('guide4') }}"><img
+                        src="../static/images/Emergency logos/electric_shock.jpg" alt="Electric Shock">
+                    <figcaption>Electric Shock</figcaption>
+                </a></li>
+        </ul>
+    </div>
+    <article>
+        <h6 id="disclaimer">Disclaimer: Please Consult a Doctor As Well</h6>
+    </article>
+    <footer>
+        <p>&copy; <span id="current-year"></span> Auron. All rights reserved. | Health Activated</p>
+    </footer>
+    </div>
+    <script>
+        function debugForm() {
+            let ageValue = document.querySelector('input[name="age"]').value;
+            console.log("Debug: Age Entered ->", ageValue);
+        }
+        function openPopup() {
+            document.getElementById("about-us-popup").style.display = "block";
+        }
+        function closePopup() {
+            document.getElementById("about-us-popup").style.display = "none";
+        }
+        function toggleMenu() {
+            document.getElementById("menu-list").classList.toggle("active");
+        }
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+        console.log("%c © 2025 Shaik Zuheruddin. All Rights Reserved.", "color: #20dbca; font-size: 16px;");
+    </script>
+    <p style="font-size: 8px; color: rgba(255, 255, 255, 0.1); position: absolute; bottom: 5px; right: 10px;">
+        © Szuher 2025
+    </p>
+</body>
+</html>
+
